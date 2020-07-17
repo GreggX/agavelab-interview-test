@@ -3,7 +3,6 @@ services:
   db:
     image: postgres:latest
     container_name: mon-postgres
-    network_mode: bridge
     ports:
       - "5432:5432"
     environment:
@@ -12,3 +11,26 @@ services:
     volumes:
       - ./.tmp/postgres:/var/lib/postgres
       - ./.tmp/postgres/scripts:/docker-entrypoint-initdb.d
+    networks:
+      - agavelab-test
+
+  ws:
+    image: node:latest
+    container_name: node-agavelabs-ws
+    volumes:
+      - ./src:/app/agavelab/src
+      - ./scripts:/app/agavelab/scripts
+      - ${PWD}/package.json:/app/agavelab/package.json
+      - ${PWD}/package-lock.json:/app/agavelab/package-lock.json
+    networks:
+      - agavelab-test
+    ports:
+      - "3001:3001"
+    environment:
+      - RUNNING_ENV=development
+    depends_on:
+      - db
+    command: bash /app/agavelab/scripts/start.sh
+
+networks:
+  agavelab-test:

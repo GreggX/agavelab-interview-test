@@ -19,7 +19,7 @@ async function createModel(instance) {
 }
 
 async function postgresConnection() {
-  let db = await new Sequelize('postgres://postgres:admin@0.0.0.0:5432/products')
+  let db = await new Sequelize('postgres://postgres:admin@localhost:5432/products')
   try {
     console.log('Connected to postgres')
     return db
